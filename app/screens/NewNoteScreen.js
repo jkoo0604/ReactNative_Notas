@@ -92,7 +92,7 @@ const NewNoteScreen = ({navigation}) => {
         notesRef.add({...noteData, createdAt: firebase.firestore.FieldValue.serverTimestamp(),
             updatedAt: firebase.firestore.FieldValue.serverTimestamp()})
             .then(doc => {
-                console.log(html);
+                // console.log(html);
                 const newNotedata = {...noteData, id: doc.id};
                 dispatch({
                     type: "NOTES",

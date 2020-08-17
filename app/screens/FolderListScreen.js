@@ -133,19 +133,19 @@ const FolderListScreen = ({navigation}) => {
                 }
                 <ListItem containerStyle={styles.listItemAdd} key={-1} title={<MyText size={15} color={colors.darkAction}>+ Add notebook</MyText>} onPress={()=> openModal()}/>
             </ScrollView>
-                <Modal animationType="slide" transparent={true} visible={modalVisible} >
-                    <View style={styles.modal}>
-                        <View style={styles.modalContent}>
-                            <TextInput style={styles.input} placeholder="Notebook name" placeholderTextColor={colors.darkNeutral40} onChangeText={(text) => setNewNotebook(text)} value={newNotebook} underlineColorAndroid="transparent" autoCapitalize="none" />
-                        </View>
-                        <View style={styles.modalFooter}>
-                            <MyText onPress={() => closeModal()} size={16} color={colors.darkNeutral60}>Cancel</MyText>
-                            <TouchableHighlight style={styles.button} onPress={() => addNotebook()}>
-                                <MyText size={16} color={colors.darkAction} >Add</MyText>
-                            </TouchableHighlight>
-                        </View>
+            <Modal animationType="slide" transparent={true} visible={modalVisible} >
+                <View style={styles.modal}>
+                    <View style={styles.modalContent}>
+                        <TextInput style={styles.input} placeholder="Notebook name" placeholderTextColor={colors.darkNeutral40} onChangeText={(text) => setNewNotebook(text)} value={newNotebook} underlineColorAndroid="transparent" autoCapitalize="none" />
                     </View>
-                </Modal>
+                    <View style={styles.modalFooter}>
+                        <MyText onPress={() => closeModal()} size={16} color={colors.darkNeutral60}>Cancel</MyText>
+                        <TouchableHighlight style={styles.button} onPress={() => addNotebook()}>
+                            <MyText size={16} color={colors.darkAction} >Add</MyText>
+                        </TouchableHighlight>
+                    </View>
+                </View>
+            </Modal>
         </SafeAreaView>
     )
 }

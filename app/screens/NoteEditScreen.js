@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react'
-import { KeyboardAvoidingView, SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { KeyboardAvoidingView, SafeAreaView, ScrollView, StyleSheet, Text, View, Modal, TouchableHighlight } from 'react-native';
 import { actions, defaultActions, RichEditor, RichToolbar } from 'react-native-pell-rich-editor';
 import * as ImagePicker from 'expo-image-picker';
 import * as ImageManipulator from 'expo-image-manipulator';
@@ -17,6 +17,7 @@ const NoteEditScreen = ({navigation}) => {
     const dispatch = useDispatch();
     const [tags, setTags] = useState(note.tags.join());
     const [isPublic, setIsPublic] = useState(note.public);
+    const [modalVisible, setModalvisible] = useState(false);
 
     const richText = useRef(null);
 
@@ -98,15 +99,44 @@ const NoteEditScreen = ({navigation}) => {
                     type: 'CURRENTNOTES',
                     currentNotes: newCurrentNotes
                 })
-                    navigation.navigate('Folders')
+                navigation.navigate('Folders')
             })
 
         console.log(html);
     }
 
+    const deleteNote = async () => {
+        const notesRef = firebase.firestore().collection('notes');
+        notesRef.doc(note.id).delete()
+            .then(() => {
+                const updateIdx = notes.findIndex(item => item['id'] === note.id);
+                const newNotes = [...notes.slice(0,updateIdx), ...notes.slice(updateIdx+1)];
+                dispatch({
+                    type: 'NOTES',
+                    notes: newNotes
+                })
+                const updateIdx2 = currentNotes.findIndex(el => el['id']===note.id);
+                const newCurrentNotes = [...currentNotes.slice(0,updateIdx2), ...currentNotes.slice(updateIdx2+1)];
+                dispatch({
+                    type: 'CURRENTNOTES',
+                    currentNotes: newCurrentNotes
+                })
+                navigation.navigate('Notes')
+            })
+    }
+
+    const openModal = () => {
+        setModalvisible(true);
+    }
+
+    const closeModal = () => {
+        setModalvisible(false);
+    }
+
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.headerForm}>
+                <MyText color={colors.darkActionLight} onPress={openModal} size={12}>Delete</MyText>
                 <MyText color={colors.darkAction} onPress={updateNote} size={16}>Save</MyText>
             </View>
             <ScrollView keyboardDismissMode={'none'} style={styles.editorWrapper}>             
@@ -139,6 +169,19 @@ const NoteEditScreen = ({navigation}) => {
                     ),}}
                 />
             </KeyboardAvoidingView>
+            <Modal animationType="slide" transparent={true} visible={modalVisible} >
+                <View style={styles.modal}>
+                    <View style={styles.modalContent}>
+                        <MyText size={16} color={colors.darkNeutral60}>Are you sure you want to delete this note?</MyText>
+                    </View>
+                    <View style={styles.modalFooter}>
+                        <MyText onPress={() => closeModal()} size={16} color={colors.darkNeutral60}>Cancel</MyText>
+                        <TouchableHighlight style={styles.button} onPress={deleteNote}>
+                            <MyText size={16} color={colors.darkAction} >Delete</MyText>
+                        </TouchableHighlight>
+                    </View>
+                </View>
+            </Modal>
         </SafeAreaView>
     )
 }
@@ -188,7 +231,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         padding: 10,
-        justifyContent: 'center'
+        justifyContent: 'space-between'
     },
     editorWrapper: {
         textAlign: 'center',
@@ -196,6 +239,27 @@ const styles = StyleSheet.create({
     editor: {
         backgroundColor: colors.darkBackground,
         color: colors.darkNeutral100
+    },
+    modal: {
+        justifyContent: 'space-between',
+        width: '60%',
+        height: '20%',
+        alignSelf: 'center',
+        marginTop: 200,
+        backgroundColor: colors.darkNeutral80,
+        borderRadius: 5,
+        padding: 20
+    },
+    modalContent: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    modalFooter: {
+        marginTop: 10,
+        flexDirection: 'row',
+        justifyContent: 'space-evenly'
+
     }
 });
 
