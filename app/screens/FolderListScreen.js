@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
-import { SafeAreaView, ScrollView, StyleSheet, TextInput, View, TouchableHighlight, Modal } from 'react-native';
+import { SafeAreaView, ScrollView, StyleSheet, TextInput, View, TouchableHighlight } from 'react-native';
+import Modal from 'react-native-modal';
 import { ListItem } from 'react-native-elements';
 import * as firebase from 'firebase';
 import { useSelector, useDispatch } from 'react-redux';
@@ -15,6 +16,7 @@ const FolderListScreen = ({navigation}) => {
     const dispatch = useDispatch();   
     const [modalVisible, setModalvisible] = useState(false);
     const [newNotebook, setNewNotebook] = useState('');
+    const [isFocus, setIsFocus] = useState(false);
 
     useEffect(() => {
         const notebooksRef = firebase.firestore().collection('notebooks');
@@ -104,7 +106,12 @@ const FolderListScreen = ({navigation}) => {
 
     const closeModal = () => {
         setNewNotebook('');
+        setIsFocus(false);
         setModalvisible(false);
+    }
+
+    const changeInputBorder = () => {
+        setIsFocus(true);
     }
 
     return (
@@ -119,7 +126,7 @@ const FolderListScreen = ({navigation}) => {
                         return(
                             <View key={idx} >
                                 <ListItem 
-                                badge={{ value: fNotes.length, badgeStyle: { backgroundColor: colors.darkNeutral20,  borderWidth: 0,} }} 
+                                badge={{ value: fNotes.length, badgeStyle: { backgroundColor: colors.darkBackground,  borderWidth: 0, paddingHorizontal: 10}, textStyle: { fontSize: 17, fontWeight: 'bold'} }} 
                                 onPress={() => selectList(notebook, fNotes)}                             
                                 title={
                                     <MyText color={colors.darkNeutral100} size={17}>{notebook.name}</MyText>
@@ -133,15 +140,15 @@ const FolderListScreen = ({navigation}) => {
                 }
                 <ListItem containerStyle={styles.listItemAdd} key={-1} title={<MyText size={15} color={colors.darkAction}>+ Add notebook</MyText>} onPress={()=> openModal()}/>
             </ScrollView>
-            <Modal animationType="slide" transparent={true} visible={modalVisible} >
+            <Modal isVisible={modalVisible} onBackdropPress={closeModal}>
                 <View style={styles.modal}>
                     <View style={styles.modalContent}>
-                        <TextInput style={styles.input} placeholder="Notebook name" placeholderTextColor={colors.darkNeutral40} onChangeText={(text) => setNewNotebook(text)} value={newNotebook} underlineColorAndroid="transparent" autoCapitalize="none" />
+                        <TextInput style={[{borderWidth: isFocus ? 1 : 0}, styles.input]} placeholder="Notebook name" placeholderTextColor={colors.darkNeutral40} onChangeText={(text) => setNewNotebook(text)} value={newNotebook} underlineColorAndroid="transparent" autoCapitalize="none" onFocus={changeInputBorder} autoFocus/>
                     </View>
                     <View style={styles.modalFooter}>
-                        <MyText onPress={() => closeModal()} size={16} color={colors.darkNeutral60}>Cancel</MyText>
+                        <MyText onPress={() => closeModal()} size={16} color={colors.darkNeutral60}>CANCEL</MyText>
                         <TouchableHighlight style={styles.button} onPress={() => addNotebook()}>
-                            <MyText size={16} color={colors.darkAction} >Add</MyText>
+                            <MyText size={16} color={colors.darkAction} >ADD</MyText>
                         </TouchableHighlight>
                     </View>
                 </View>
@@ -188,28 +195,26 @@ const styles = StyleSheet.create({
         marginHorizontal: 10
     },
     modal: {
-        alignItems: 'center',
-        justifyContent: 'center',
-        width: '80%',
-        height: '40%',
+        // alignItems: 'center',
+        // justifyContent: 'center',
+        width: '100%',
         alignSelf: 'center',
-        marginTop: 200,
-        backgroundColor: colors.darkNeutral80,
-        borderRadius: 5
+        backgroundColor: colors.darkBackgroundCard,
+        borderRadius: 5,
+        paddingVertical: 30,
+        paddingHorizontal: 15,
     },
     input: {
-        height: 60,
         borderRadius: 5,
         overflow: 'hidden',
         backgroundColor: colors.darkNeutral00,
-        marginTop: 5,
-        marginBottom: 3,
-        marginLeft: 10,
-        marginRight: 20,
-        paddingLeft: 10,
-        paddingRight: 10,
+        // marginLeft: 10,
+        // marginRight: 20,
+        paddingHorizontal: 15,
+        paddingVertical: 15,
         color: colors.darkNeutral100,
-        width: 200
+        width: '100%',
+        borderColor: colors.darkAction,
     },
     button: {
         marginLeft: 30
@@ -222,7 +227,8 @@ const styles = StyleSheet.create({
     modalFooter: {
         marginTop: 20,
         flexDirection: 'row',
-        justifyContent: 'space-evenly'
+        justifyContent: 'space-between',
+        paddingHorizontal: 20
     }
 });
 

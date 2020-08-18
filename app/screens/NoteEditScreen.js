@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react'
-import { KeyboardAvoidingView, SafeAreaView, ScrollView, StyleSheet, Text, View, Modal, TouchableHighlight } from 'react-native';
+import { KeyboardAvoidingView, SafeAreaView, ScrollView, StyleSheet, Text, View, TouchableHighlight } from 'react-native';
+import Modal from 'react-native-modal';
 import { actions, defaultActions, RichEditor, RichToolbar } from 'react-native-pell-rich-editor';
 import * as ImagePicker from 'expo-image-picker';
 import * as ImageManipulator from 'expo-image-manipulator';
@@ -136,7 +137,7 @@ const NoteEditScreen = ({navigation}) => {
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.headerForm}>
-                <MyText color={colors.darkActionLight} onPress={openModal} size={12}>Delete</MyText>
+                <MyText color={colors.darkActionDelete} onPress={openModal} size={16}>Delete</MyText>
                 <MyText color={colors.darkAction} onPress={updateNote} size={16}>Save</MyText>
             </View>
             <ScrollView keyboardDismissMode={'none'} style={styles.editorWrapper}>             
@@ -169,15 +170,16 @@ const NoteEditScreen = ({navigation}) => {
                     ),}}
                 />
             </KeyboardAvoidingView>
-            <Modal animationType="slide" transparent={true} visible={modalVisible} >
+            {/* <Modal animationType="slide" transparent={true} visible={modalVisible} > */}
+            <Modal isVisible={modalVisible} >
                 <View style={styles.modal}>
                     <View style={styles.modalContent}>
-                        <MyText size={16} color={colors.darkNeutral60}>Are you sure you want to delete this note?</MyText>
+                        <MyText size={16} color={colors.darkNeutral100}>Are you sure you want to delete this note?</MyText>
                     </View>
                     <View style={styles.modalFooter}>
-                        <MyText onPress={() => closeModal()} size={16} color={colors.darkNeutral60}>Cancel</MyText>
+                        <MyText onPress={() => closeModal()} size={16} color={colors.darkNeutral60}>CANCEL</MyText>
                         <TouchableHighlight style={styles.button} onPress={deleteNote}>
-                            <MyText size={16} color={colors.darkAction} >Delete</MyText>
+                            <MyText size={16} color={colors.darkActionDelete} >DELETE</MyText>
                         </TouchableHighlight>
                     </View>
                 </View>
@@ -242,11 +244,10 @@ const styles = StyleSheet.create({
     },
     modal: {
         justifyContent: 'space-between',
-        width: '60%',
+        width: '80%',
         height: '20%',
         alignSelf: 'center',
-        marginTop: 200,
-        backgroundColor: colors.darkNeutral80,
+        backgroundColor: colors.darkBackgroundCard,
         borderRadius: 5,
         padding: 20
     },
@@ -258,7 +259,7 @@ const styles = StyleSheet.create({
     modalFooter: {
         marginTop: 10,
         flexDirection: 'row',
-        justifyContent: 'space-evenly'
+        justifyContent: 'space-between'
 
     }
 });

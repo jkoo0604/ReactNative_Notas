@@ -117,7 +117,7 @@ const NewNoteScreen = ({navigation}) => {
                 <MyText color={colors.darkAction} onPress={addNote} size={16}>Save</MyText>
             </View>
             <ScrollView keyboardDismissMode={'none'} style={styles.editorWrapper}>             
-                <RichEditor ref={richText} initialContentHTML="" containerStyle={{backgroundColor: colors.darkBackground}} editorStyle={styles.editor} style={styles.rich} placeholder={'Create a new note'} />
+                <RichEditor ref={richText} initialContentHTML="" containerStyle={{backgroundColor: colors.darkBackground}} editorStyle={styles.editor} style={styles.rich} placeholder={'Type anything'} />
             </ScrollView>
             <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} enabled keyboardVerticalOffset={60}>
                 <RichToolbar
@@ -187,14 +187,14 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         padding: 10,
-        justifyContent: 'center'
+        justifyContent: 'flex-end'
     },
     editorWrapper: {
         textAlign: 'center',
     },
     editor: {
         backgroundColor: colors.darkBackground,
-        color: colors.darkNeutral100
+        color: colors.darkNeutral100,
     }
 });
 
