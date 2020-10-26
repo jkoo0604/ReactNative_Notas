@@ -1,7 +1,7 @@
 # Notas
 ### Mobile app for note-taking
 
-An iOS productivity app for composing rich text notes with images. Content organization via notebooks with timestamped preview of notes. Offers Google sign-in option. Built with React Native leveraging Firebase Authentication, Firestore and Storage.
+An iOS productivity app for composing rich text notes with images. Content organization via notebooks with timestamped preview of notes. Offers Google sign-in option. Built with React Native and serverless backend using Google Cloud (Firebase Authentication, Firestore and Storage).
 
 * Firebase Authentication for email/password authentication and Google sign-in
 * Firebase Firestore and Firebase Storage for data/image storage
